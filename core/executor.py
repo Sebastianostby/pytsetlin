@@ -11,6 +11,9 @@ from core.feedback import evaluate_clauses_training, get_update_p, update_clause
 @njit
 def train_epoch(cb, wb, x, y, threshold, s, n_outputs, n_literals):
 
+    cb = np.ascontiguousarray(cb)
+    wb = np.ascontiguousarray(wb)
+
     indices = np.arange(x.shape[0], dtype=np.int32) # this does not need to be calulated at every epoch...
     np.random.shuffle(indices)
 
@@ -31,7 +34,8 @@ def train_epoch(cb, wb, x, y, threshold, s, n_outputs, n_literals):
                 update_ps[i] = get_update_p(wb, clause_outputs, threshold, i, False)    
 
         if np.sum(update_ps) == 0.0:
-            return
+            return cb, wb
+
         
         not_target = np.random.randint(n_outputs)
 
@@ -42,6 +46,9 @@ def train_epoch(cb, wb, x, y, threshold, s, n_outputs, n_literals):
         neg_update_p = update_ps[not_target]
 
         update_clauses(cb, wb, clause_outputs, pos_update_p, neg_update_p, target, not_target, literals, n_literals, s)
+
+    return cb, wb
+
 
 @njit
 def classify(x, clause_block, weight_block, threshold, n_literals, n_outputs):

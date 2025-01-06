@@ -14,7 +14,7 @@ def evaluate_clauses_training(literals, cb, n_literals):
 
         for literal_k in range(n_literals):
 
-            if(cb[clause_k][literal_k] >= 0):
+            if(cb[clause_k][literal_k] > 0):
 
                 if(literals[literal_k] == 0):
 
@@ -22,7 +22,7 @@ def evaluate_clauses_training(literals, cb, n_literals):
 
                     break
             
-            if(cb[clause_k][literal_k + n_literals] >= 0):
+            if(cb[clause_k][literal_k + n_literals] > 0):
 
                 if(literals[literal_k] == 1):   
 
@@ -44,7 +44,7 @@ def evaluate_clause(literals, clause_block, n_literals):
 
         for literal_k in range(n_literals):
 
-            if(clause_block[clause_k][literal_k] >= 0):
+            if(clause_block[clause_k][literal_k] > 0):
 
                 is_empty_clause = False
 
@@ -54,7 +54,7 @@ def evaluate_clause(literals, clause_block, n_literals):
 
                     break
             
-            if(clause_block[clause_k][literal_k + n_literals] >= 0):
+            if(clause_block[clause_k][literal_k + n_literals] > 0):
 
                 is_empty_clause = False
 
@@ -184,10 +184,10 @@ def T2Feedback(clause_row, literals, n_literals):
     for literal_k in range(n_literals):
 
         if(literals[literal_k] == 0):
-            if(clause_row[literal_k] < 0):
+            if(clause_row[literal_k] <= 0):
                 clause_row[literal_k] += 1
 
         else:
-            if(clause_row[literal_k + n_literals] < 0):
+            if(clause_row[literal_k + n_literals] <= 0):
                 
                 clause_row[literal_k + n_literals] += 1

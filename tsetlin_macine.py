@@ -108,7 +108,10 @@ class TsetlinMachine:
 
             for epoch in range(training_epochs):
 
-                executor.train_epoch(self.C, self.W, self.x_train, self.y_train, self.threshold, self.s, self.n_outputs, self.n_literals)
+                self.C, self.W = executor.train_epoch(
+                    self.C, self.W, self.x_train, self.y_train, 
+                    self.threshold, self.s, self.n_outputs, self.n_literals
+                    )
 
                 if (epoch+1) % eval_freq == 0:
 
