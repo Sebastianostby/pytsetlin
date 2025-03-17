@@ -5,3 +5,4 @@ scikit-learn==1.6.0
 pandas==2.2.3 
 pytest==8.3.4
 datasets==3.2.0
+optuna==4.2.1

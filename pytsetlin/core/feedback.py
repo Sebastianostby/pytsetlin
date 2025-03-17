@@ -155,7 +155,6 @@ def T1aFeedback(cb, clause_k, literals, n_literals, s_min_inv, s_inv, boost_true
                     cb[clause_k, literal_k] += 1
 
             else:
-                print('YEPP')
                 if(np.random.random() <= s_min_inv):
                     if(cb[clause_k, literal_k] < upper_state):
                         cb[clause_k, literal_k] += 1

@@ -1,10 +1,18 @@
 from pytsetlin.core import executor
 from pytsetlin.core import config
+from pytsetlin.core import tuner
+
 from numba import set_num_threads
 import tqdm
 import numpy as np
+import optuna
+
 from time import perf_counter
 import os
+
+import logging
+logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
+
 
 
 
@@ -202,6 +210,7 @@ class TsetlinMachine:
         return executor.evaluate_clause(literals, memory, literals.shape[0])
 
 
+
     def save_state(self, file_name = 'tm_state.npz', location_dir='saved_states'):
 
         if not os.path.isdir(f'{location_dir}'):
@@ -210,7 +219,37 @@ class TsetlinMachine:
         np.savez(f"{location_dir}/{file_name}", C=self.C, W=self.W)
 
 
+    def optimize_hyperparameters(self, n_trials=100, training_epochs=10):
+
+        logging.info(f"This optimization only tunes threshold, s, boost_true_positives, and n_literal_budget. n_clauses is fixed at {self.n_clauses}.")
+
+        self.allocate_memory()
+
+        study = optuna.create_study(direction='maximize')
+
+        study.optimize(lambda trial: tuner.objective(trial, self, training_epochs), n_trials=n_trials, show_progress_bar=True)
+
+        best_params = study.best_params.copy()
+
+        best_value = study.best_value
+        
+        if 'do_literal_budget' in best_params:
+            if not best_params['do_literal_budget']:
+                best_params['n_literal_budget'] = "infinity"
+            del best_params['do_literal_budget']
+        
+        print(f"Score: {best_value:.4f}")
+        print("Parameters:")
+        for param, value in best_params.items():
+            print(f"  {param}: {value}")
+
+
+
+
+
+
 if __name__ == "__main__":
 
-    tm = TsetlinMachine()
+    tm = TsetlinMachine(n_clauses=500)
 
+    tm.optimize_hyperparameters()

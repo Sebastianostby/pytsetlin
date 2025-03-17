@@ -1,8 +1,5 @@
 # PyTsetlin
 
-
-README.md under construction...
-
 A low-code, feature-POOR, Pythonic implementation of a Coalesced Tsetlin Machine. This is not intended to be a feature-rich or speed-optimized implementation; see relevant repositories like [
 TMU](https://github.com/cair/tmu) and [green-tsetlin](https://github.com/ooki/green_tsetlin) for that. However, it's intended to be an easy-to-use TM programmed in Python, with the intent of making it accessible to plug-and-play new ideas and be able to get some results, either on an input level or TM memory level. Also, since the implementation is written entirely in Python, the code can be compared with the theoretical concepts presented in the papers, potentially making it easier to grasp.
 
@@ -12,7 +9,7 @@ Even though this repo is not focused on speed, I have made some functions compat
 
 1. Install package to environment to use in other projects:
 ```bash
-pip install git+https://github.com/Sebastianostby/pytsetlin.git
+pip install pytsetlin
 ```
 
 2. Clone or template this repository and install the required dependencies:
