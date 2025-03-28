@@ -94,6 +94,10 @@ class TsetlinMachine:
         if (self.n_literals is None) or (self.n_outputs is None):
             raise ValueError("failed to allocate memory, make sure data is set using set_train_data() and set_eval_data()")
 
+        if self.x_eval is None:
+            self.x_eval = self.x_train.copy()
+            self.y_eval = self.y_train.copy()
+
 
         self.C = np.zeros((self.n_clauses, 2*self.n_literals), dtype=np.int8)
         self.W = np.random.choice(np.array([-1, 1]), size=(self.n_outputs, self.n_clauses), replace=True).astype(np.int32)
