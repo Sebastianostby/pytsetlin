@@ -8,7 +8,7 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 
 setup(
     name="pytsetlin",
-    version="1.1.0",
+    version="1.1.1",
     author="Sebastian Østby",
     author_email="Sebastianostby@gmail.com",
     description="A low-code Pythonic implementation of a Coalesced Tsetlin Machine",

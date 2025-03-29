@@ -1,3 +1,2 @@
-
 N_THREADS = 1
 OPERATE_PARALLEL = True

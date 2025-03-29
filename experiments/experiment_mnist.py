@@ -14,7 +14,8 @@ if __name__ == "__main__":
 
     tm = TsetlinMachine(n_clauses=500,
                         threshold=625,
-                        s=10.0)
+                        s=10.0,
+                        n_threads=20)
 
     tm.set_train_data(X_train, y_train)
 

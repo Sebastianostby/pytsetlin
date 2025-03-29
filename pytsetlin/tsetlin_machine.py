@@ -3,7 +3,7 @@ import os
 import re
 from time import perf_counter
 
-from numba import set_num_threads
+from numba import set_num_threads, get_num_threads
 import numpy as np
 import optuna
 import tqdm
@@ -23,7 +23,8 @@ class TsetlinMachine:
                  threshold:int = 100,
                  n_literal_budget:int = np.inf,
                  boost_true_positives:bool = True, 
-                 n_threads:int = 1):
+                 n_threads:int = 1,
+                 seed=None):
 
         self.n_clauses = n_clauses        
         self.s = s    
@@ -43,6 +44,16 @@ class TsetlinMachine:
         config.N_THREADS = n_threads
         config.OPERATE_PARALLEL = True if config.N_THREADS > 1 and not config.N_THREADS <= 0 else False
         set_num_threads(config.N_THREADS)
+
+        if seed is not None and get_num_threads() > 1:
+            logging.warning(f"Random state seed is not supported for parallel opperations. Running without seed.")
+
+        self.seed = seed
+        if seed is None:
+            self.seed = np.random.randint(0, 1000)
+
+        np.random.seed(self.seed)
+
 
 
     def set_train_data(self, instances:np.array, targets:np.array):
@@ -99,7 +110,7 @@ class TsetlinMachine:
             self.y_eval = self.y_train.copy()
 
 
-        self.C = np.zeros((self.n_clauses, 2*self.n_literals), dtype=np.int8)
+        self.C = np.zeros((self.n_clauses, 2*self.n_literals), dtype=np.int8, order='C')
         self.W = np.random.choice(np.array([-1, 1]), size=(self.n_outputs, self.n_clauses), replace=True).astype(np.int32)
 
 
@@ -134,6 +145,7 @@ class TsetlinMachine:
               location_dir="saved_states"):
 
 
+
         full_path = os.path.join(location_dir, file_name)
         if os.path.exists(full_path):
             raise FileExistsError(f"File already exists: {full_path}")
@@ -163,7 +175,7 @@ class TsetlinMachine:
                 train_predictions = executor.train_epoch(
                                         self.C, self.W, self.x_train, self.y_train, 
                                         self.threshold, self.s_min_inv, self.s_inv, self.n_outputs, self.n_literals, self.n_literal_budget,
-                                        self.boost_true_positives)
+                                        self.boost_true_positives, self.seed)
                                     
                 et = perf_counter()
                 

@@ -1,25 +1,22 @@
 from numba import njit, prange
 import numpy as np
-from pytsetlin.core.feedback import evaluate_clauses_training, get_update_p, update_clauses, evaluate_clause
+from pytsetlin.core.feedback import evaluate_clauses_training, update_clauses, evaluate_clause
 from pytsetlin.core import config
 
 
 @njit
-def train_epoch(cb, wb, x, y, threshold, s_min_inv, s_inv, n_outputs, n_literals, n_literal_budget, boost_true_positives):
+def train_epoch(cb, wb, x, y, threshold, s_min_inv, s_inv, n_outputs, n_literals, n_literal_budget, boost_true_positives, seed):
     
+    np.random.seed(seed)
 
-    cb = np.ascontiguousarray(cb)
-    wb = np.ascontiguousarray(wb)
-
-    indices = np.arange(x.shape[0], dtype=np.int32) # this does not need to be calulated at every epoch?
-    np.random.shuffle(indices)
+    n_indices = len(x)
 
     clause_outputs = np.ones(cb.shape[0], dtype=np.uint8)
     literals_counts = np.zeros(cb.shape[0], dtype=np.uint32)
 
-    y_hat = np.zeros(y.shape, dtype=np.uint32)
+    y_hat = np.zeros(n_indices, dtype=np.uint32)
 
-    for indice in indices:
+    for indice in range(n_indices):
         literals = x[indice]
         target = y[indice]
         
@@ -27,20 +24,18 @@ def train_epoch(cb, wb, x, y, threshold, s_min_inv, s_inv, n_outputs, n_literals
         
         vote_values = np.dot(wb.astype(np.float32), clause_outputs.astype(np.float32))
 
+        vote_values_clamped = np.clip(vote_values,  -threshold, threshold)
+
         not_target = np.random.randint(0, n_outputs)
 
         while(not_target == target):
             not_target = np.random.randint(0, n_outputs)
 
-        votes = vote_values[target]
-
-        v_clamped_pos = np.clip(np.array(votes), -threshold, threshold)
+        v_clamped_pos = vote_values_clamped[target]
 
         pos_update_p =  (threshold - v_clamped_pos) / (2*threshold)
 
-        votes = vote_values[not_target]
-
-        v_clamped_neg = np.clip(np.array(votes), -threshold, threshold)
+        v_clamped_neg = vote_values_clamped[not_target]
 
         neg_update_p =  (threshold + v_clamped_neg) / (2*threshold)
 

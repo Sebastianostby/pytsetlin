@@ -43,10 +43,10 @@ Here's a basic example of how to use the Tsetlin Machine:
 >>> r = tm.train(training_epochs=10)
 
 # progress bar for visualization
-Eval Acc: 96.31, Best Eval Acc: 96.31 (10): 100%|██████████| 10/10 [01:03<00:00,  6.30s/it]
+Train Acc: 95.78, Eval Acc: 96.22, Best Eval Acc: 96.22 (10): 100%|███████████| 10/10 [00:55<00:00,  5.60s/it]
 
 >>> print(r)
-{'train_time': [12.25, 5.77, 5.42, 4.96, 6.83, 4.71, 4.58, 4.88, 4.11, 5.9], 'eval_acc': [91.56, 92.97, 93.45, 94.42, 94.24, 94.71, 94.82, 95.1, 95.11, 96.31], 'best_eval_acc': 96.31, 'best_eval_epoch': 10}
+{'train_time': [10.82, 5.95, 5.08, 4.9, 4.65, 4.58, 4.44, 4.38, 4.35, 4.25], 'train_acc': [86.81, 92.18, 93.47, 94.04, 94.54, 94.91, 95.22, 95.53, 95.58, 95.78], 'eval_acc': [91.06, 93.01, 93.62, 94.3, 94.44, 94.73, 94.82, 94.97, 95.22, 96.22], 'best_eval_acc': 96.22, 'best_eval_epoch': 10}
 ```
 Note performance may vary depending on system! 
 
