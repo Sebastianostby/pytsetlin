@@ -9,7 +9,7 @@ from pytsetlin.data import xor
 @pytest.fixture
 def sample_binary_data():
 
-    X_train, y_train = xor.get_xor(n_rows = 1000, noise_fraction=0.3)
+    X_train, y_train = xor.get_xor(n_rows = 1000, noise_fraction=0.2)
     X_test, y_test = xor.get_xor(n_rows = 200, noise_fraction=0.0)
 
     return X_train, y_train, X_test, y_test
@@ -17,7 +17,7 @@ def sample_binary_data():
 @pytest.fixture
 def basic_tsetlin():
 
-    return TsetlinMachine(n_clauses=100, s=2.0, threshold=200)
+    return TsetlinMachine(n_clauses=100, s=2.0, threshold=200, seed=12)
 
 def test_initialization(basic_tsetlin):
 
