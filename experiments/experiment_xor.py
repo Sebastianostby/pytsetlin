@@ -19,11 +19,11 @@ if __name__ == "__main__":
     x = np.array([[0, 0],
                   [0, 1],
                   [1, 0],
-                  [1, 1]])
+                  [1, 1]], dtype=np.uint8)
 
-    y = np.array([0, 1, 1, 0])
+    y = np.array([0, 1, 1, 0], dtype=np.uint32)
 
-    tm = TsetlinMachine(n_clauses=4)
+    tm = TsetlinMachine(n_clauses=4, seed=32)
 
     tm.set_train_data(x, y)
     tm.set_eval_data(x, y)
