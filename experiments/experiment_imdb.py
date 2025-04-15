@@ -12,16 +12,15 @@ if __name__ == "__main__":
 
     x_train, y_train, x_test, y_test = get_imdb()
 
-    tm = TsetlinMachine(n_clauses=100,
-                        threshold=500,
-                        s=10.0,
-			n_literal_budget=5)
+    tm = TsetlinMachine(n_clauses=500,
+                        threshold=2000,
+                        s=2.0)
 
     tm.set_train_data(x_train, y_train)
 
     tm.set_eval_data(x_test, y_test)
 
-    r = tm.train(training_epochs=100)
+    r = tm.train(training_epochs=10)
     
     print(r)
 
